@@ -1,2 +1,6 @@
 .env
+Pipfile
+Pipfile.lock
 notes.txt
+retrievedata.py
+__pycache__
