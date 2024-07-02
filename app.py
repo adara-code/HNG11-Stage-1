@@ -29,7 +29,8 @@ def home():
         
     
         ip_address = request.remote_addr
-        city = ip_data["city"].title()
+        # city = ip_data["city"].title()
+        city = temp_data["location"]["name"].title()
         temp = temp_data["current"]["temp_c"]
         
         
