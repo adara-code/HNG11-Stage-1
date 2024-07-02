@@ -5,7 +5,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 app = Flask(__name__)
+
 
 def get_data(ip_address):
     api_key = os.getenv("API_KEY")
@@ -19,8 +21,9 @@ def get_data(ip_address):
     
     data = {
         "location" : city,
-        "temperature" : temperature
+        "temperature" : temperature,
     }
+    
     
     return data
 
@@ -31,17 +34,53 @@ def home():
     This function returns the client's IP address, location, and city after receiving query parameters from the URL.
     Real-time data is gathered using Weatherapi.
     """
-    name = request.args.get('visitor_name').strip('"').title()
-    ip_address = request.headers.get("X-Forwarded-For", request.remote_addr)
     
-    current_data = get_data(ip_address)
+
+    name = request.args.get('visitor_name').strip('"').title()
+    
+    if request.headers.getlist("X-Forwarded-For"):
+        client_ip = request.headers.getlist("X-Forwarded-For")[0].split(',')[0].strip()
+    else:
+        client_ip = request.remote_addr
+        
+    current_data = get_data(client_ip)
     response = {
-        "client" : ip_address,
+        "client" : client_ip,
         "location" : current_data.get("location"),
         "greeting" : f"Hello, {name}!, The temperature is {current_data.get("temperature")} in {current_data.get("location")}"
     }
     
     return response
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    # ip_address = request.headers.get("X-Forwarded-For", request.remote_addr)
+    if request.headers.getlist("X-Forwarded-For"):
+        client_ip = request.headers.getlist("X-Forwarded-For")[0].split(',')[0].strip()
+    else:
+        client_ip = request.remote_addr
+    
+    # current_data = get_data(client_ip)
+    # response = {
+    #     "client" : client_ip,
+    #     "location" : current_data.get("location"),
+    #     "greeting" : f"Hello, {name}!, The temperature is {current_data.get("temperature")} in {current_data.get("location")}"
+    # }
+    
+    # return response
+    # return current_data
     
     
 
