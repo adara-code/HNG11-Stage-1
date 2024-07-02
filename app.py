@@ -16,32 +16,29 @@ def home():
     """
     name = request.args.get('visitor_name').strip('"').title()
     
-    if name.isalpha():
-        api_key = os.getenv("API_KEY")
-        
-        temperature_endpoint = f"https://api.weatherapi.com/v1/current.json?key={api_key}&q=auto:ip"
-        ip_endpoint = f"https://api.weatherapi.com/v1/ip.json?key={api_key}&q=auto:ip"
-        
-        temp_data = requests.get(temperature_endpoint).json()
-        ip_data = requests.get(ip_endpoint).json()
-        
-        # git commit -m"Testing flask's in-built function that returns ip address"
-        
+    api_key = os.getenv("API_KEY")
     
-        ip_address = request.remote_addr
-        # city = ip_data["city"].title()
-        city = temp_data["location"]["name"].title()
-        temp = temp_data["current"]["temp_c"]
-        
-        
-        response = {
-            "client_ip" : f"{ip_address}",
-            "location" : f"{city}",
-            "greeting": f"Hello, {name}!, The temperature is {temp} degrees celsius in {city}",
-        }
-        
-        return jsonify(response)
-    else:
-        return "Only alphabets allowed as values in the url"
+    temperature_endpoint = f"https://api.weatherapi.com/v1/current.json?key={api_key}&q=auto:ip"
+    ip_endpoint = f"https://api.weatherapi.com/v1/ip.json?key={api_key}&q=auto:ip"
+    
+    temp_data = requests.get(temperature_endpoint).json()
+    ip_data = requests.get(ip_endpoint).json()
+    
+    # git commit -m"Testing flask's in-built function that returns ip address"
+    
+
+    ip_address = ip_data["ip"]
+    city = ip_data["city"].title()
+    temp = temp_data["current"]["temp_c"]
+    
+    
+    response = {
+        "client_ip" : f"{ip_address}",
+        "location" : f"{city}",
+        "greeting": f"Hello, {name}!, The temperature is {temp} degrees celsius in {city}",
+    }
+    
+    return jsonify(response)
+   
 
     
