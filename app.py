@@ -12,17 +12,25 @@ app = Flask(__name__)
 def get_data(ip_address):
     api_key = os.getenv("API_KEY")
     
+    location_endpoint = f"https://ipinfo.io/{ip_address}?token=209ba7ac43dd94"
+    
+    
     weather_endpoint = f"https://api.weatherapi.com/v1/current.json?key={api_key}&q={ip_address}"
     
     weather_data = requests.get(weather_endpoint).json()
+    location = requests.get(location_endpoint).json()
 
-    city = weather_data["location"]["name"]
+    # city = weather_data["location"]["name"]
+    city = location["region"]
     temperature = weather_data["current"]["temp_c"]
     
     data = {
         "location" : city,
         "temperature" : temperature,
     }
+    
+    
+    print(location)
     
     
     return data
@@ -44,6 +52,9 @@ def home():
         client_ip = request.remote_addr
         
     current_data = get_data(client_ip)
+    print(current_data) 
+    print(client_ip)
+    
     response = {
         "client" : client_ip,
         "location" : current_data.get("location"),
