@@ -7,6 +7,23 @@ load_dotenv()
 
 app = Flask(__name__)
 
+def get_data(ip_address):
+    api_key = os.getenv("API_KEY")
+    
+    weather_endpoint = f"https://api.weatherapi.com/v1/current.json?key={api_key}&q={ip_address}"
+    
+    weather_data = requests.get(weather_endpoint).json()
+
+    city = weather_data["location"]["name"]
+    temperature = weather_data["current"]["temp_c"]
+    
+    data = {
+        "location" : city,
+        "temperature" : temperature
+    }
+    
+    return data
+
 
 @app.route('/api/hello', methods=["GET"])
 def home():
@@ -15,29 +32,20 @@ def home():
     Real-time data is gathered using Weatherapi.
     """
     name = request.args.get('visitor_name').strip('"').title()
+    ip_address = request.headers.get("X-Forwarded-For", request.remote_addr)
     
-    api_key = os.getenv("API_KEY")
-    
-    temperature_endpoint = f"https://api.weatherapi.com/v1/current.json?key={api_key}&q=auto:ip"
-    ip_endpoint = f"https://api.weatherapi.com/v1/ip.json?key={api_key}&q=auto:ip"
-    
-    temp_data = requests.get(temperature_endpoint).json()
-    ip_data = requests.get(ip_endpoint).json()
-    
-
-    ip_address = ip_data.get("ip")
-    city = ip_data["city"].title()
-    temperature = temp_data.get("current").get("temp_c")
-    
-   
+    current_data = get_data(ip_address)
     response = {
-        "client_ip" : f"{ip_address}",
-        "location" : f"{city}",
-        "greeting": f"Hello, {name}!, The temperature is {temperature} degrees celsius in {city}",
+        "client" : ip_address,
+        "location" : current_data.get("location"),
+        "greeting" : f"Hello, {name}!, The temperature is {current_data.get("temperature")} in {current_data.get("location")}"
     }
     
-    return jsonify(response)
-   
+    return response
+    
+    
+
+
         
         
 
