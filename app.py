@@ -15,7 +15,6 @@ def home():
     Real-time data is gathered using Weatherapi.
     """
     name = request.args.get('visitor_name').strip('"').title()
-    ip_address = request.headers.get("X-Forwarded-For", request.remote_addr)
     
     api_key = os.getenv("API_KEY")
     
@@ -24,28 +23,20 @@ def home():
     
     temp_data = requests.get(temperature_endpoint).json()
     ip_data = requests.get(ip_endpoint).json()
-        
-
-    # ip_address = ip_data["ip"]
-    city = ip_data["city"].title()
-    temp = temp_data["current"]["temp_c"]
     
-    if name:
-        response = {
-            "client_ip" : f"{ip_address}",
-            "location" : f"{city}",
-            "greeting": f"Hello, {name}!, The temperature is {temp} degrees celsius in {city}",
-        }
-        
-        return jsonify(response)
-    else:
-        response = {
-            "client_ip" : f"{ip_address}",
-            "location" : f"{city}",
-            "greeting": f"Hello, Anonymous User!, The temperature is {temp} degrees celsius in {city}",
-        }
-        
-        return jsonify(response)
+    ip_address = ip_data["ip"]
+    city = ip_data["city"].title()
+    temperature = temp_data["current"]["temp_c"]
+    
+   
+    response = {
+        "client_ip" : f"{ip_address}",
+        "location" : f"{city}",
+        "greeting": f"Hello, {name}!, The temperature is {temperature} degrees celsius in {city}",
+    }
+    
+    return jsonify(response)
+   
         
         
 
