@@ -23,9 +23,7 @@ def home():
     
     temp_data = requests.get(temperature_endpoint).json()
     ip_data = requests.get(ip_endpoint).json()
-    
-    # git commit -m"Testing flask's in-built function that returns ip address"
-    
+        
 
     ip_address = ip_data["ip"]
     city = ip_data["city"].title()
