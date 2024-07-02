@@ -29,14 +29,25 @@ def home():
     city = ip_data["city"].title()
     temp = temp_data["current"]["temp_c"]
     
-    
-    response = {
-        "client_ip" : f"{ip_address}",
-        "location" : f"{city}",
-        "greeting": f"Hello, {name}!, The temperature is {temp} degrees celsius in {city}",
-    }
-    
-    return jsonify(response)
+    if name:
+        response = {
+            "client_ip" : f"{ip_address}",
+            "location" : f"{city}",
+            "greeting": f"Hello, {name}!, The temperature is {temp} degrees celsius in {city}",
+        }
+        
+        return jsonify(response)
+    else:
+        response = {
+            "client_ip" : f"{ip_address}",
+            "location" : f"{city}",
+            "greeting": f"Hello, Anonymous User!, The temperature is {temp} degrees celsius in {city}",
+        }
+        
+        return jsonify(response)
+        
+        
+
    
 
     
