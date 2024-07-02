@@ -24,9 +24,10 @@ def home():
     temp_data = requests.get(temperature_endpoint).json()
     ip_data = requests.get(ip_endpoint).json()
     
-    ip_address = ip_data["ip"]
+
+    ip_address = ip_data.get("ip")
     city = ip_data["city"].title()
-    temperature = temp_data["current"]["temp_c"]
+    temperature = temp_data.get("current").get("temp_c")
     
    
     response = {
