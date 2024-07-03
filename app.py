@@ -23,6 +23,7 @@ def get_location():
         "lon": url_data["longitude"],
         "ip": client_ip
         }
+    
     return coordinates
     
 
